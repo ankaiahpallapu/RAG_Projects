@@ -1,0 +1,49 @@
+# Multilingual instruction fine-tuning (LoRA / QLoRA). Override anything from the CLI: --set train.epochs=1
+
+base_model: Qwen/Qwen2.5-1.5B-Instruct      # strong multilingual tokenizer; swap for a 7B/8B model on bigger GPUs
+output_dir: outputs/run1
+
+# ISO 639-3 codes. 6 languages here; add/remove freely (Aya covers 65+).
+languages: [eng, hin, spa, fra, deu, tel]
+
+data:
+  source: hf                                 # hf | jsonl
+  hf_dataset: CohereLabs/aya_dataset         # human-written multilingual instruction data
+  hf_split: train
+  jsonl_path: null                           # used when source: jsonl
+  columns: {instruction: inputs, response: targets, lang: language_code}   # map YOUR column names here
+  processed_dir: data/processed
+  max_total: 60000                           # total examples after language balancing
+  sampling_alpha: 0.5                        # 1.0 = proportional to size, 0.0 = equal per language
+  val_fraction: 0.02
+  max_val_per_lang: 300
+  min_chars: 8
+  max_chars: 6000
+  max_seq_len: 1024
+  seed: 42
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules: all-linear
+
+train:
+  epochs: 2
+  lr: 2.0e-4
+  per_device_batch: 8
+  grad_accum: 4                              # effective batch = 8 * 4 * num_gpus
+  warmup_ratio: 0.03
+  scheduler: cosine
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  bf16: true                                 # auto-falls back to fp16/fp32 if unsupported
+  gradient_checkpointing: true
+  qlora: false                               # true = 4-bit NF4 base (fits 7B-8B on a 24 GB GPU)
+  group_by_length: true
+  eval_steps: 200                            # also the checkpoint interval
+  logging_steps: 20
+  save_total_limit: 2
+  max_steps: -1
+  report_to: none                            # or wandb / tensorboard
+  seed: 42

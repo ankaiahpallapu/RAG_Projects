@@ -1,0 +1,7 @@
+numpy>=1.26
+faiss-cpu>=1.8            # required for backend="faiss" (IVF-PQ); backend="flat" works without it
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
+httpx>=0.27               # gateway only
+sentence-transformers>=3.0  # optional: lets /search accept raw text (set VS_EMBED_MODEL)

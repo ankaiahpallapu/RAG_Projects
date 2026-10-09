@@ -1,0 +1,11 @@
+torch>=2.3
+transformers>=4.44
+peft>=0.12
+accelerate>=0.33
+datasets>=2.20
+bitsandbytes>=0.43      # only for QLoRA (train.qlora: true); Linux + NVIDIA GPU
+sentencepiece
+protobuf
+pyyaml
+# Optional, for the fastest serving path in benchmark.py:
+# vllm>=0.6

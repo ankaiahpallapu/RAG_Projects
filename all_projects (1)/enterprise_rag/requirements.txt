@@ -1,0 +1,11 @@
+numpy>=1.26
+scipy>=1.11
+faiss-cpu>=1.8          # optional: without it a NumPy brute-force dense index is used (fine for <100K chunks)
+sentence-transformers>=3.0
+pypdf>=4.0
+python-docx>=1.1
+beautifulsoup4>=4.12
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
+anthropic>=0.40         # only needed when RAG_LLM_BACKEND=anthropic
